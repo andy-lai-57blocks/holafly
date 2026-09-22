@@ -1,0 +1,32 @@
+{
+  "name": "holafly",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "assets": "node tools/extract-assets.mjs",
+    "build": "node tools/build.mjs",
+    "build:locales": "for L in en es ja zh; do LOCALE=$L node tools/build.mjs || exit 1; done",
+    "qa": "node tools/qa.mjs",
+    "shots": "node tools/smoke.mjs",
+    "balance": "node tools/hazard-probe.mjs",
+    "zone": "node tools/zone-probe.mjs",
+    "skyline": "node tools/skyline-probe.mjs",
+    "transition": "node tools/transition-probe.mjs",
+    "serve": "node tools/serve.mjs",
+    "preview": "node tools/serve.mjs",
+    "pack": "node tools/extract-versions.mjs && node tools/pack.mjs && node tools/build-preview.mjs",
+    "pack:verify": "node tools/pack-verify.mjs && node tools/preview-verify.mjs",
+    "pack:compliance": "node tools/compliance.mjs",
+    "liftoff": "node tools/liftoff-probe.mjs && node tools/preload-probe.mjs && node tools/liftoff-verify.mjs",
+    "test": "node tools/build.mjs && node tools/qa.mjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "jsqr": "^1.4.0",
+    "playwright": "^1.56.0",
+    "qrcode": "^1.5.4"
+  }
+}

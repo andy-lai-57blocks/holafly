@@ -1,0 +1,537 @@
+/*
+ * S5 — layout. Holds no brand values: every colour and face is read from a CSS
+ * custom property that ui.js publishes out of PlayableConfig.style.
+ *
+ * Safe-area insets are applied to the UI layer rather than the canvas, so the
+ * coral field stays full-bleed under a notch while no control or word of copy
+ * can land beneath the hardware (RULE-PRF-008).
+ */
+
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background: #E65B76;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+#playable-root {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  font-family: var(--font);
+  color: var(--white);
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+  box-sizing: border-box;
+}
+
+#stage {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+#game-canvas-container {
+  position: absolute;
+  inset: 0;
+}
+
+#game {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+
+#ui-layer {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: stretch;
+  padding-top: max(10px, env(safe-area-inset-top));
+  padding-bottom: max(10px, env(safe-area-inset-bottom));
+  padding-left: max(10px, env(safe-area-inset-left));
+  padding-right: max(10px, env(safe-area-inset-right));
+  box-sizing: border-box;
+  pointer-events: none;
+}
+
+#ui-layer > * { pointer-events: none; }
+#ui-layer [data-stop-tap] { pointer-events: auto; }
+
+/* ------------------------------------------------------------------ HUD */
+
+/* The container owns both top corners — a close button lands in one and a
+   regulatory watermark can land in the other, drawn straight over the
+   creative. But it owns two corners, not a strip: the middle of that band is
+   free, and the wordmark is narrow enough to live there. The readouts are not:
+   side by side they are wider than the gap between the corners on a 320px
+   slot, so they start below the band instead. */
+#hud {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding-top: var(--corner-reserve);
+  transition: opacity 260ms ease;
+}
+
+#hud.dim { opacity: 0; }
+
+/* The two readouts are the scoreboard for the product claim — signal held and
+   borders crossed — so they sit together on the centre line where the eye
+   already is, rather than split across two corners. They wrap instead of
+   shrinking, because a 320px slot in a long locale cannot hold both on one
+   row and a clipped readout says nothing at all. */
+#hud-readouts {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 6px 8px;
+  max-width: 100%;
+}
+
+/* Centred in the reserved band rather than flowing above the readouts, so it
+   uses space the container was going to take anyway. */
+#hud-wordmark {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  height: clamp(15px, 4.2vh, 26px);
+  width: auto;
+  filter: drop-shadow(0 1px 2px rgba(120, 20, 40, 0.35));
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--maroon);
+  border-radius: 999px;
+  padding: 5px 11px;
+  font-size: clamp(10px, 2.5vh, 13px);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: 0.01em;
+  box-shadow: 0 2px 6px rgba(120, 20, 40, 0.28);
+}
+
+.pill .label {
+  font-weight: 500;
+  opacity: 0.92;
+}
+
+#meter-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 1.05em;
+}
+
+#meter-bars .bar {
+  width: 3px;
+  border-radius: 1px;
+  background: rgba(255, 255, 255, 0.28);
+  transition: background 140ms ease;
+}
+
+#meter-bars .bar:nth-child(1) { height: 34%; }
+#meter-bars .bar:nth-child(2) { height: 52%; }
+#meter-bars .bar:nth-child(3) { height: 70%; }
+#meter-bars .bar:nth-child(4) { height: 86%; }
+#meter-bars .bar:nth-child(5) { height: 100%; }
+#meter-bars .bar.on { background: var(--green); }
+
+#meter-num { min-width: 2.6em; text-align: right; font-variant-numeric: tabular-nums; }
+#meter-num.low { color: var(--yellow); }
+
+/* Coverage hole: the pill glitches and the lit bars go red, so the HUD agrees
+   with the interference on the canvas instead of quietly counting down. */
+/* 420ms holds the blink under 3Hz, the photosensitivity threshold. */
+#meter-pill.nosignal { animation: nosignal 420ms steps(1, end) infinite; }
+#meter-pill.nosignal .bar.on { background: var(--primary); }
+#meter-pill.nosignal #meter-num { color: var(--yellow); }
+
+@keyframes nosignal {
+  0% { background: var(--maroon); transform: translateX(0); }
+  50% { background: var(--primary); transform: translateX(1px); }
+}
+
+#dest-count {
+  display: inline-block;
+  min-width: 1.1em;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+/* -------------------------------------------------------------- banners */
+
+#banner {
+  position: absolute;
+  left: 50%;
+  top: 19%;
+  transform: translate(-50%, -6px);
+  background: var(--maroon);
+  color: var(--white);
+  font-weight: 700;
+  font-size: clamp(13px, 3.4vh, 19px);
+  padding: 7px 16px;
+  border-radius: 6px;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 200ms ease, transform 200ms ease;
+  box-shadow: 0 4px 14px rgba(120, 20, 40, 0.3);
+  max-width: 88%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#banner.show { opacity: 1; transform: translate(-50%, 0); }
+#banner[data-tone="good"] { background: #14884B; }
+#banner[data-tone="bad"] { background: var(--primary); }
+
+/* --------------------------------------------------------- hook overlay */
+
+/* The brand promise, stated in the brand's own headline device, inside the
+   first seconds so the hook asserts the value proposition while the gameplay
+   demonstrates it (RULE-CVR-001). Fades before the first gate banner lands. */
+#hook-overlay {
+  position: absolute;
+  left: 50%;
+  top: 21%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: min(86%, 430px);
+  opacity: 1;
+  transition: opacity 340ms ease, transform 340ms ease;
+}
+
+#hook-overlay.hide {
+  opacity: 0;
+  transform: translateX(-50%) translateY(-10px);
+}
+
+#hook-overlay .hl {
+  font-size: clamp(20px, 7.4vw, 38px);
+  box-shadow: 0 4px 14px rgba(120, 20, 40, 0.26);
+}
+
+/* ------------------------------------------------------------ idle hint */
+
+#idle-hint {
+  position: absolute;
+  left: 50%;
+  top: 52%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  opacity: 0;
+  transition: opacity 200ms ease;
+}
+
+#idle-hint.show { opacity: 1; }
+
+#idle-hint svg {
+  width: clamp(38px, 9vh, 56px);
+  height: clamp(38px, 9vh, 56px);
+  fill: var(--white);
+  filter: drop-shadow(0 2px 5px rgba(120, 20, 40, 0.4));
+  animation: tapBounce 900ms ease-in-out infinite;
+}
+
+#idle-hint-text {
+  background: var(--maroon);
+  border-radius: 999px;
+  padding: 5px 13px;
+  font-size: clamp(11px, 2.7vh, 14px);
+  font-weight: 700;
+}
+
+@keyframes tapBounce {
+  0%, 100% { transform: translateY(0) scale(1); }
+  45% { transform: translateY(-14%) scale(0.94); }
+}
+
+/* ------------------------------------------------------------------ CTA */
+
+.cta {
+  border: 0;
+  border-radius: 999px;
+  background: var(--cta);
+  color: var(--cta-text);
+  font-family: var(--font);
+  font-weight: 700;
+  cursor: pointer;
+  min-height: 44px;
+  min-width: 44px;
+  box-shadow: 0 4px 14px rgba(120, 20, 40, 0.32);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cta:active { transform: translateY(1px); }
+
+#live-cta-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+#live-cta {
+  padding: 0 22px;
+  height: 46px;
+  font-size: 15px;
+  line-height: 46px;
+  max-width: 78%;
+}
+
+/* -------------------------------------------------------------- endcard */
+
+#endcard {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, var(--coral-top) 0%, var(--coral-bottom) 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(10px, 2.4vh, 20px);
+  padding: max(16px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-left))
+           max(16px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-right));
+  box-sizing: border-box;
+  opacity: 0;
+  transition: opacity 320ms ease;
+  pointer-events: auto;
+  overflow: hidden;
+}
+
+#endcard.show { opacity: 1; }
+#endcard[hidden] { display: none; }
+
+#end-wordmark {
+  height: clamp(20px, 4.6vh, 34px);
+  width: auto;
+  flex: 0 0 auto;
+}
+
+#end-card-body {
+  background: var(--white);
+  border-radius: clamp(16px, 3vh, 26px);
+  padding: clamp(14px, 3vh, 26px) clamp(14px, 4vw, 26px);
+  width: 100%;
+  max-width: 430px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(9px, 2vh, 16px);
+  box-shadow: 0 10px 30px rgba(120, 20, 40, 0.24);
+}
+
+#end-head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+}
+
+/* The brand's headline device: white type on a solid maroon block. */
+.hl {
+  display: block;
+  background: var(--maroon);
+  color: var(--white);
+  font-weight: 700;
+  line-height: 1.16;
+  padding: 0.1em 0.3em;
+  border-radius: 3px;
+  text-align: center;
+  max-width: 100%;
+  height: 1.38em;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+#end-body {
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(12px, 2.7vh, 15px);
+  font-weight: 500;
+  line-height: 1.4;
+  text-align: center;
+}
+
+#end-stats {
+  display: flex;
+  width: 100%;
+  gap: 6px;
+  justify-content: space-between;
+}
+
+.stat {
+  flex: 1 1 0;
+  min-width: 0;
+  background: #FFF1F3;
+  border-radius: 12px;
+  padding: 8px 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+}
+
+.stat-value {
+  color: var(--maroon);
+  font-weight: 700;
+  font-size: clamp(16px, 3.6vh, 22px);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+}
+
+.stat-label {
+  color: #4A4C50;
+  font-size: clamp(9px, 1.9vh, 11px);
+  font-weight: 500;
+  text-align: center;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+#end-cta-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+#end-logo {
+  width: clamp(38px, 8vh, 50px);
+  height: clamp(38px, 8vh, 50px);
+  border-radius: 22%;
+  flex: 0 0 auto;
+}
+
+#end-cta {
+  flex: 1 1 auto;
+  height: clamp(46px, 8vh, 56px);
+  font-size: 17px;
+  padding: 0 14px;
+}
+
+/* Deliberately quieter than the CTA. Its job is to hold the player who is not
+   ready to install yet, not to compete with the button that converts. */
+#end-replay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 44px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--maroon);
+  font-family: var(--font);
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  opacity: 0.82;
+}
+
+#end-replay svg { width: 17px; height: 17px; fill: currentColor; }
+
+/* Legal copy: >=10px, and solid dark-on-white so the contrast ratio is
+   measurable and comfortably past 4.5:1 (RULE-CMP-003). */
+#legal {
+  margin: 0;
+  color: #4A4C50;
+  background: var(--white);
+  border-radius: 10px;
+  padding: 7px 12px;
+  box-sizing: border-box;
+  font-size: var(--legal-size);
+  font-weight: 400;
+  line-height: 1.35;
+  text-align: center;
+  max-width: 430px;
+  overflow-wrap: anywhere;
+}
+
+/* -------------------------------------------------- landscape composition */
+
+/* Landscape has roughly a third of the vertical room, and the corner reserve
+   takes a further 50px off the top of it, so the stack below the HUD is
+   re-spaced rather than left to collide with it. */
+@media (orientation: landscape) {
+  #banner { top: 30%; }
+  #hook-overlay { top: 32%; width: min(58%, 430px); }
+  #hook-overlay .hl { font-size: clamp(16px, 3.6vw, 28px); }
+  #idle-hint { top: 56%; left: 34%; }
+  #live-cta { height: 44px; line-height: 44px; font-size: 14px; }
+
+  /* Two columns, not three. A plain `flex-direction: row` turns the wordmark,
+     the card and the disclaimer into three sibling columns, which strands the
+     disclaimer out on its own at the right edge. Grid keeps the brand and the
+     legal copy stacked together beside the card. */
+  #endcard {
+    display: grid;
+    grid-template-columns: auto minmax(0, min(58vw, 470px));
+    grid-template-areas:
+      "brand card"
+      "legal card";
+    align-content: center;
+    justify-content: center;
+    column-gap: clamp(12px, 3vw, 34px);
+    row-gap: clamp(8px, 2vh, 16px);
+  }
+
+  #end-wordmark {
+    grid-area: brand;
+    height: clamp(18px, 7vh, 30px);
+    justify-self: center;
+    align-self: end;
+  }
+
+  #end-card-body {
+    grid-area: card;
+    max-width: min(58vw, 470px);
+    gap: clamp(7px, 2vh, 13px);
+    padding: clamp(10px, 3vh, 20px) clamp(14px, 2.4vw, 24px);
+    align-self: center;
+  }
+
+  #end-cta { height: clamp(44px, 13vh, 54px); }
+
+  #legal {
+    grid-area: legal;
+    max-width: min(30vw, 280px);
+    align-self: start;
+  }
+}
+
+/* Very short viewports: drop the decorative rows before the CTA or the legal
+   text can be pushed out of frame. */
+@media (max-height: 380px) {
+  #end-stats { display: none; }
+  #end-body { display: none; }
+}

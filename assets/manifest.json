@@ -1,0 +1,66 @@
+{
+  "generatedAt": "2026-09-22T11:43:48.791Z",
+  "sprites": [
+    {
+      "name": "wordmark",
+      "file": "assets/sprites/wordmark.webp",
+      "width": 240,
+      "height": 67,
+      "bytes": 2084,
+      "source": "img_46.png",
+      "provenance": "Hero screenshot header — the official Holafly wordmark with the wave crossbar.",
+      "role": "Brand identity. Endcard lockup and gameplay HUD."
+    },
+    {
+      "name": "logomark",
+      "file": "assets/sprites/logomark.webp",
+      "width": 160,
+      "height": 160,
+      "bytes": 2062,
+      "source": "icon.png",
+      "provenance": "Play Store app icon, 512x512 — crimson gradient tile, white wave-crossbar H.",
+      "role": "Brand identity. Endcard app tile, and the eSIM the runner is carrying."
+    },
+    {
+      "name": "orb-unlimited",
+      "file": "assets/sprites/orb-unlimited.webp",
+      "width": 120,
+      "height": 69,
+      "bytes": 2352,
+      "source": "img_20.png",
+      "provenance": "\"True Unlimited Data\" screenshot — the infinity sticker badge.",
+      "role": "Collectible. Refills the signal meter, mirroring unlimited data with no caps."
+    },
+    {
+      "name": "coin-savings",
+      "file": "assets/sprites/coin-savings.webp",
+      "width": 100,
+      "height": 95,
+      "bytes": 886,
+      "source": "img_4.png",
+      "provenance": "\"No roaming fees\" screenshot — the piggy-bank sticker.",
+      "role": "Collectible. Savings pickup, mirroring the no-roaming-fees value proposition."
+    }
+  ],
+  "fonts": [
+    {
+      "weight": "bold",
+      "file": "assets/fonts/ModernEra-Bold.subset.woff2",
+      "bytes": 10876,
+      "sourceBytes": 30972,
+      "provenance": "Official Modern Era webfont, self-hosted by Holafly at media.holafly.com."
+    },
+    {
+      "weight": "medium",
+      "file": "assets/fonts/ModernEra-Medium.subset.woff2",
+      "bytes": 10932,
+      "sourceBytes": 31032,
+      "provenance": "Official Modern Era webfont, self-hosted by Holafly at media.holafly.com."
+    }
+  ],
+  "totals": {
+    "spriteBytes": 7384,
+    "fontBytes": 21808,
+    "allBytes": 29192
+  }
+}

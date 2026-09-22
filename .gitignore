@@ -1,0 +1,9 @@
+# Generated. `npm run build` and `npm run pack` rebuild both from source.
+/build/
+/dist/
+
+# Toolchains
+/node_modules/
+/.venv/
+
+.DS_Store

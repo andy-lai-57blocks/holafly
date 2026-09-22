@@ -1,0 +1,96 @@
+{
+  "$comment": "S1 BRAND_HARVEST output. Every token carries provenance (gate G1). Sampled from Holafly's own published assets: the Google Play listing for com.holafly.holafly and esim.holafly.com. Do not edit by hand without re-running the harvest.",
+  "brand": "Holafly",
+  "harvestedAt": "2026-09-17",
+  "sources": {
+    "storeListing": "https://play.google.com/store/apps/details?id=com.holafly.holafly&hl=en",
+    "appIcon": "play-lh/R7ZtwBNNc2GoRmhi...DXWP4vU (512x512)",
+    "heroScreenshot": "play-lh/XBafGctsPPpzt93PB7nmm...sE_- — 'Holafly / Stay connected / Wherever you go.'",
+    "brandSite": "https://esim.holafly.com/"
+  },
+
+  "color": {
+    "brandRed":      { "hex": "#D7192D", "source": "esim.holafly.com CSS custom property --color-brand" },
+    "brandRedDark":  { "hex": "#A01323", "source": "esim.holafly.com CSS custom property --color-gradients-button-dark" },
+    "iconGradientFrom": { "hex": "#E02B58", "source": "app icon 512x512, top-left region mode" },
+    "iconGradientTo":   { "hex": "#C90A4F", "source": "app icon 512x512, bottom-right region mode" },
+    "coralTop":      { "hex": "#F08689", "source": "hero screenshot, top background strip region mode" },
+    "coralBottom":   { "hex": "#E65B76", "source": "hero screenshot, lower background region mode" },
+    "coralMid":      { "hex": "#E6485C", "source": "esim.holafly.com inline style, most frequent accent" },
+    "maroonHighlight": { "hex": "#951C39", "source": "hero screenshot, headline highlight box region mode" },
+    "accentGreen":   { "hex": "#48EC86", "source": "'No roaming fees' screenshot, in-app Checkout button region mode" },
+    "accentYellow":  { "hex": "#FFF620", "source": "hero screenshot, four-point sparkle region mode" },
+    "cloudPink":     { "hex": "#F799A1", "source": "hero screenshot, decorative cloud region mode" },
+    "crimsonButton": { "hex": "#D41A53", "source": "'True Unlimited Data' screenshot, in-app Install button region mode" },
+    "ink":           { "hex": "#292B2E", "source": "esim.holafly.com, most frequent text colour" },
+    "white":         { "hex": "#FFFFFF", "source": "hero screenshot headline fill" },
+    "stickerOutline":{ "hex": "#FFFFFF", "source": "store creative sticker illustration style (piggy/rocket/calendar cutouts)" },
+    "illustrationTeal": { "hex": "#8FD3E8", "source": "'Quick set up' screenshot, illustrated traveler garment" },
+    "illustrationHair": { "hex": "#2B2B33", "source": "'Quick set up' screenshot, illustrated traveler hair" },
+    "illustrationSkin": { "hex": "#F4C9A8", "source": "'Quick set up' screenshot, illustrated traveler skin" }
+  },
+
+  "typography": {
+    "family": "Modern Era",
+    "source": "media.holafly.com/public/fonts/ModernEra/ — the brand's own self-hosted webfont, referenced by esim.holafly.com",
+    "weights": {
+      "regular": { "file": "ModernEra-Regular.woff2", "css": 400 },
+      "medium":  { "file": "ModernEra-Medium.woff2",  "css": 500 },
+      "bold":    { "file": "ModernEra-Bold.woff2",    "css": 700 }
+    },
+    "fallbackStack": "'Modern Era', 'Helvetica Neue', Helvetica, Arial, sans-serif",
+    "headlineTreatment": {
+      "description": "Bold white lowercase-heavy headline set on a solid maroon highlight block, tight leading, block hugs the text",
+      "source": "every phone screenshot in the listing",
+      "fill": "#FFFFFF",
+      "highlight": "#951C39"
+    }
+  },
+
+  "logo": {
+    "mark": {
+      "description": "Square crimson-gradient tile with a white capital H whose crossbar is a wave that extends past the left stem",
+      "source": "app icon"
+    },
+    "wordmark": {
+      "description": "'Holafly' in Modern Era Bold; the H's wave crossbar extends left of the stem as a standalone stroke",
+      "source": "hero screenshot header, and in-app support header"
+    },
+    "clearspace": "Minimum clearspace equal to the cap height of the wordmark on all sides.",
+    "prohibited": [
+      "Recolouring the wordmark to anything other than white or brandRed",
+      "Applying the wave crossbar to any letter other than H",
+      "Stretching or condensing either mark"
+    ]
+  },
+
+  "motifs": [
+    { "name": "coralGradientField", "description": "Full-bleed vertical coral gradient, coralTop to coralBottom", "source": "all listing screenshots" },
+    { "name": "dottedWorldMap",     "description": "Very low-contrast dotted world-map texture behind app surfaces", "source": "in-app home screen in hero screenshot" },
+    { "name": "puffyClouds",        "description": "Soft rounded pink clouds scattered at low opacity", "source": "all listing screenshots" },
+    { "name": "fourPointSparkle",   "description": "Yellow four-point star sparkle, varied scale and rotation", "source": "all listing screenshots" },
+    { "name": "goldPhoneFrame",     "description": "Device mockup outlined in warm gold", "source": "all listing screenshots" },
+    { "name": "whiteOutlineSticker","description": "Flat-fill spot illustrations with a thick white outline and drop shadow, overlapping the device frame", "source": "piggy bank, calendar, money stack, rocket, QR traveler cutouts" }
+  ],
+
+  "voice": {
+    "headlines": [
+      "Stay connected",
+      "Wherever you go.",
+      "True Unlimited Data",
+      "No roaming fees",
+      "Travel smart",
+      "Quick set up"
+    ],
+    "source": "store listing screenshot headlines — verbatim, so no claim is invented",
+    "productFeatures": [
+      "Unlimited data with no hidden caps",
+      "200+ destinations",
+      "No roaming charges",
+      "Always On: free monthly backup data",
+      "HolaCoins rewards",
+      "24/7 customer support",
+      "Set up in under a minute"
+    ]
+  }
+}

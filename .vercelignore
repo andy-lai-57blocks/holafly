@@ -1,0 +1,10 @@
+# Only the pack chain runs on Vercel: creatives/ + src/ + assets/ + preview/
+# + tools/. Everything below is local tooling, research material or generated
+# output, and Vercel rebuilds the output itself.
+/build/
+/dist/
+/node_modules/
+/.venv/
+/reference/
+/docs/
+.DS_Store
